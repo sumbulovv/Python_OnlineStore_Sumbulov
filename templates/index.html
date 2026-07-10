@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if request.user.is_authenticated %}
+        <h1>Добро пожаловать на интернет-сайт, {{request.user.username}}!</h1>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Выйти</button>
+        </form>
+        <br>
+    {% else %}
+        <h1>Добро пожаловать на главную страницу!</h1>
+        <a href="{% url 'login' %}">Войти</a>
+        <br>
+        <a href="{% url 'register' %}">Регистрация</a>
+        <br>
+    {% endif %}
+    <p>
+        <input value="Список товаров" type="button" onclick="location.href='{% url "product_list" %}'"/>
+        <input value="Список категорий" type="button" onclick="location.href='{% url "category_list" %}'"/>
+    </p>
+    {% if request.user.is_authenticated %}
+        <p>
+            <input value="Добавить в корзину" type="button" onclick="location.href='{% url "add_to_basket" %}'"/>
+        </p>
+        <p>
+            <input value="Корзина" type="button" onclick="location.href='{% url "view_basket" %}'"/>
+        </p>
+    {% endif %}
+{% endblock %}

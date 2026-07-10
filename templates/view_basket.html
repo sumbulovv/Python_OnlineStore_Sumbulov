@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Корзина</h2>
+    {% if basket_items %}
+        <ul>
+            {% for item in basket_items %}
+                <li>{{ item.product.name }} - {{ item.quantity }} шт. - {{ item.product.price }} руб./шт.</li>
+            {% endfor %}
+        </ul>
+        <p>Общая стоимость: {{ total_price }} руб.</p>
+    {% else %}
+        <p>Ваша корзина пуста.</p>
+    {% endif %}
+    <p>
+        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
+    </p>
+{% endblock %}

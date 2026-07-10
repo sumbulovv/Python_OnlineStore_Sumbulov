@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Список товаров</h1>
+    <ul>
+    {% for product in products %}
+    <li><a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a></li>
+    {% endfor %}
+    </ul>
+    {% if request.user.is_staff %}
+        <p>
+            <input value="Добавить товар" type="button" onclick="location.href='{% url "add_product" %}'"/>
+        </p>
+    {% endif %}
+    <p>
+        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
+    </p>
+{% endblock %}

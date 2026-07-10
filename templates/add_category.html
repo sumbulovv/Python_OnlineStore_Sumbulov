@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Добавить категорию</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Добавить</button>
+    </form>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <p>
+        <input value="Список категорий" type="button" onclick="location.href='{% url "category_list" %}'"/>
+    </p>
+    <p>
+        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
+    </p>
+{% endblock %}

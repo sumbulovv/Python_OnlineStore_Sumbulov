@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+    <h1>{{ product.name }}</h1>
+    <table>
+        <tr>
+            <td><strong>Карточка</strong></td>
+            <td><strong>Название</strong></td>
+            <td><strong>Описание</strong></td>
+            <td><strong>Цена</strong></td>
+            <td><strong>На складе</strong></td>
+        </tr>
+        <tr>
+            {% if product.image %}
+                <td><img src="{{ product.image.url }}" alt="{{ product.name }}" width="200"></td>
+            {% else %}
+                <td><img src="{% static 'img/no_image.png' %}" alt="Нет изображения" width="100"></td>
+            {% endif %}
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.price }}</td>
+            <td>{{ stock }} шт.</td>
+        </tr>
+    </table>
+    <p>
+        {% if request.user.is_staff %}
+            <input value="Редактировать товар" type="button" onclick="location.href='{% url "update_product" product.id %}'"/>
+        {% endif %}
+        <input value="Список товаров" type="button" onclick="location.href='{% url "product_list" %}'"/>
+        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
+    </p>
+    
+{% endblock %}
