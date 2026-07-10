@@ -1,33 +1,50 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block title %}{{ product.name }} | Online Store{% endblock %}
+
 {% block content %}
-    <h1>{{ product.name }}</h1>
-    <table>
-        <tr>
-            <td><strong>Карточка</strong></td>
-            <td><strong>Название</strong></td>
-            <td><strong>Описание</strong></td>
-            <td><strong>Цена</strong></td>
-            <td><strong>На складе</strong></td>
-        </tr>
-        <tr>
+    <nav class="breadcrumb-nav" aria-label="Навигация">
+        <a href="{% url 'product_list' %}">Товары</a>
+        <span>{{ product.name }}</span>
+    </nav>
+
+    <section class="product-detail">
+        <div class="product-detail__media">
             {% if product.image %}
-                <td><img src="{{ product.image.url }}" alt="{{ product.name }}" width="200"></td>
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
             {% else %}
-                <td><img src="{% static 'img/no_image.png' %}" alt="Нет изображения" width="100"></td>
+                <img src="{% static 'img/no_image.png' %}" alt="Нет изображения">
             {% endif %}
-            <td>{{ product.name }}</td>
-            <td>{{ product.description }}</td>
-            <td>{{ product.price }}</td>
-            <td>{{ stock }} шт.</td>
-        </tr>
-    </table>
-    <p>
-        {% if request.user.is_staff %}
-            <input value="Редактировать товар" type="button" onclick="location.href='{% url "update_product" product.id %}'"/>
-        {% endif %}
-        <input value="Список товаров" type="button" onclick="location.href='{% url "product_list" %}'"/>
-        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
-    </p>
-    
+        </div>
+
+        <div class="product-detail__content">
+            <span class="product-category">{{ product.category.name }}</span>
+            <h1>{{ product.name }}</h1>
+            <p class="lead">{{ product.description }}</p>
+
+            <div class="detail-stats">
+                <div>
+                    <span>Цена</span>
+                    <strong>{{ product.price }} руб.</strong>
+                </div>
+                <div>
+                    <span>На складе</span>
+                    <strong>{{ stock }} шт.</strong>
+                </div>
+            </div>
+
+            <div class="action-row">
+                {% if request.user.is_authenticated %}
+                    <a class="btn btn-primary btn-lg" href="{% url 'add_to_basket' %}">Добавить в корзину</a>
+                {% else %}
+                    <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Войти для покупки</a>
+                {% endif %}
+                <a class="btn btn-outline-dark btn-lg" href="{% url 'product_list' %}">Назад к товарам</a>
+                {% if request.user.is_staff %}
+                    <a class="btn btn-light btn-lg" href="{% url 'update_product' product.id %}">Редактировать</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
 {% endblock %}

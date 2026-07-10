@@ -1,18 +1,35 @@
 {% extends "base.html" %}
+
+{% block title %}Добавить категорию | Online Store{% endblock %}
+
 {% block content %}
-    <h1>Добавить категорию</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Добавить</button>
-    </form>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    <p>
-        <input value="Список категорий" type="button" onclick="location.href='{% url "category_list" %}'"/>
-    </p>
-    <p>
-        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
-    </p>
+    <section class="form-layout form-layout--narrow">
+        <div class="form-intro">
+            <span class="eyebrow">Категории</span>
+            <h1>Добавить категорию</h1>
+            <p>Создайте новый раздел для товаров магазина.</p>
+        </div>
+
+        <form class="store-form" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <small class="form-error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <div class="action-row">
+                <button class="btn btn-primary btn-lg" type="submit">Добавить</button>
+                <a class="btn btn-outline-dark btn-lg" href="{% url 'category_list' %}">К категориям</a>
+            </div>
+        </form>
+    </section>
 {% endblock %}

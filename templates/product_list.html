@@ -1,17 +1,49 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Товары | Online Store{% endblock %}
+
 {% block content %}
-    <h1>Список товаров</h1>
-    <ul>
-    {% for product in products %}
-    <li><a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a></li>
-    {% endfor %}
-    </ul>
-    {% if request.user.is_staff %}
-        <p>
-            <input value="Добавить товар" type="button" onclick="location.href='{% url "add_product" %}'"/>
-        </p>
-    {% endif %}
-    <p>
-        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
-    </p>
+    <section class="page-heading">
+        <div>
+            <span class="eyebrow">Каталог</span>
+            <h1>Товары</h1>
+            <p>Выберите товар и откройте подробную карточку с описанием, ценой и остатком.</p>
+        </div>
+        {% if request.user.is_staff %}
+            <a class="btn btn-primary" href="{% url 'add_product' %}">Добавить товар</a>
+        {% endif %}
+    </section>
+
+    <div class="product-grid">
+        {% for product in products %}
+            <article class="product-card">
+                <a class="product-image" href="{% url 'product_detail' product.pk %}">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{% static 'img/no_image.png' %}" alt="Нет изображения">
+                    {% endif %}
+                </a>
+
+                <div class="product-card__body">
+                    <span class="product-category">{{ product.category.name }}</span>
+                    <h2><a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a></h2>
+                    <p>{{ product.description|truncatechars:90 }}</p>
+                    <div class="product-card__footer">
+                        <strong>{{ product.price }} руб.</strong>
+                        <a class="btn btn-sm btn-outline-primary" href="{% url 'product_detail' product.pk %}">Подробнее</a>
+                    </div>
+                </div>
+            </article>
+        {% empty %}
+            <div class="empty-state">
+                <h2>Товаров пока нет</h2>
+                <p>Когда в каталоге появятся позиции, они будут отображаться здесь.</p>
+                {% if request.user.is_staff %}
+                    <a class="btn btn-primary" href="{% url 'add_product' %}">Добавить первый товар</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -1,15 +1,35 @@
 {% extends "base.html" %}
+
+{% block title %}Добавить в корзину | Online Store{% endblock %}
+
 {% block content %}
-    <h1>Добавить в корзину</h1>
-        <form method="post" action="{% url 'add_to_basket' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Добавить в корзину">
-    </form>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    <p>
-        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
-    </p>
+    <section class="form-layout form-layout--narrow">
+        <div class="form-intro">
+            <span class="eyebrow">Покупка</span>
+            <h1>Добавить в корзину</h1>
+            <p>Выберите товар и нужное количество. Система проверит остаток на складе.</p>
+        </div>
+
+        <form class="store-form" method="post" action="{% url 'add_to_basket' %}">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <small class="form-error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <div class="action-row">
+                <button class="btn btn-primary btn-lg" type="submit">Добавить в корзину</button>
+                <a class="btn btn-outline-dark btn-lg" href="{% url 'product_list' %}">К товарам</a>
+            </div>
+        </form>
+    </section>
 {% endblock %}

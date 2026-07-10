@@ -1,17 +1,51 @@
 {% extends 'base.html' %}
+
+{% block title %}Корзина | Online Store{% endblock %}
+
 {% block content %}
-    <h2>Корзина</h2>
+    <section class="page-heading">
+        <div>
+            <span class="eyebrow">Заказ</span>
+            <h1>Корзина</h1>
+            <p>Проверьте выбранные товары и итоговую стоимость.</p>
+        </div>
+        <a class="btn btn-outline-dark" href="{% url 'product_list' %}">Продолжить покупки</a>
+    </section>
+
     {% if basket_items %}
-        <ul>
-            {% for item in basket_items %}
-                <li>{{ item.product.name }} - {{ item.quantity }} шт. - {{ item.product.price }} руб./шт.</li>
-            {% endfor %}
-        </ul>
-        <p>Общая стоимость: {{ total_price }} руб.</p>
+        <div class="basket-card">
+            <div class="table-responsive">
+                <table class="table basket-table">
+                    <thead>
+                        <tr>
+                            <th>Товар</th>
+                            <th>Количество</th>
+                            <th>Цена за шт.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in basket_items %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'product_detail' item.product.pk %}">{{ item.product.name }}</a>
+                                </td>
+                                <td>{{ item.quantity }} шт.</td>
+                                <td>{{ item.product.price }} руб.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="basket-total">
+                <span>Общая стоимость</span>
+                <strong>{{ total_price }} руб.</strong>
+            </div>
+        </div>
     {% else %}
-        <p>Ваша корзина пуста.</p>
+        <div class="empty-state">
+            <h2>Ваша корзина пуста</h2>
+            <p>Откройте каталог и добавьте первый товар.</p>
+            <a class="btn btn-primary" href="{% url 'product_list' %}">Перейти к товарам</a>
+        </div>
     {% endif %}
-    <p>
-        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
-    </p>
 {% endblock %}

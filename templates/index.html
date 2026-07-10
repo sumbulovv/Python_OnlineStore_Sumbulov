@@ -1,30 +1,70 @@
 {% extends "base.html" %}
 
+{% block title %}Главная | Online Store{% endblock %}
+
 {% block content %}
-    {% if request.user.is_authenticated %}
-        <h1>Добро пожаловать на интернет-сайт, {{request.user.username}}!</h1>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Выйти</button>
-        </form>
-        <br>
-    {% else %}
-        <h1>Добро пожаловать на главную страницу!</h1>
-        <a href="{% url 'login' %}">Войти</a>
-        <br>
-        <a href="{% url 'register' %}">Регистрация</a>
-        <br>
-    {% endif %}
-    <p>
-        <input value="Список товаров" type="button" onclick="location.href='{% url "product_list" %}'"/>
-        <input value="Список категорий" type="button" onclick="location.href='{% url "category_list" %}'"/>
-    </p>
-    {% if request.user.is_authenticated %}
-        <p>
-            <input value="Добавить в корзину" type="button" onclick="location.href='{% url "add_to_basket" %}'"/>
-        </p>
-        <p>
-            <input value="Корзина" type="button" onclick="location.href='{% url "view_basket" %}'"/>
-        </p>
-    {% endif %}
+    <section class="hero-panel">
+        <div class="hero-copy">
+            <span class="eyebrow">Интернет-магазин</span>
+            {% if request.user.is_authenticated %}
+                <h1>Добро пожаловать, {{ request.user.username }}!</h1>
+                <p>Выбирайте товары, проверяйте категории и быстро переходите к корзине.</p>
+            {% else %}
+                <h1>Товары, категории и удобная корзина в одном месте</h1>
+                <p>Зайдите в аккаунт или зарегистрируйтесь, чтобы добавлять покупки в корзину.</p>
+            {% endif %}
+            <div class="hero-actions">
+                <a class="btn btn-primary btn-lg" href="{% url 'product_list' %}">Смотреть товары</a>
+                <a class="btn btn-outline-dark btn-lg" href="{% url 'category_list' %}">Категории</a>
+            </div>
+        </div>
+
+        <div class="hero-card">
+            <div class="hero-card__top">
+                <span>Витрина</span>
+                <strong>Online Store</strong>
+            </div>
+            <div class="hero-card__metric">
+                <span>Быстрый доступ</span>
+                <strong>Товары</strong>
+            </div>
+            <div class="hero-card__metric">
+                <span>Навигация</span>
+                <strong>Категории</strong>
+            </div>
+            {% if request.user.is_authenticated %}
+                <a class="btn btn-light btn-block" href="{% url 'view_basket' %}">Перейти в корзину</a>
+                <a class="btn btn-outline-light btn-block" href="{% url 'add_to_basket' %}">Добавить товар</a>
+            {% else %}
+                <a class="btn btn-light btn-block" href="{% url 'login' %}">Войти</a>
+                <a class="btn btn-outline-light btn-block" href="{% url 'register' %}">Создать аккаунт</a>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="feature-grid">
+        <a class="feature-tile" href="{% url 'product_list' %}">
+            <span class="feature-icon">01</span>
+            <h2>Каталог</h2>
+            <p>Аккуратная сетка товаров с описанием, ценой и карточкой товара.</p>
+        </a>
+        <a class="feature-tile" href="{% url 'category_list' %}">
+            <span class="feature-icon">02</span>
+            <h2>Категории</h2>
+            <p>Простой способ быстро понять ассортимент магазина.</p>
+        </a>
+        {% if request.user.is_authenticated %}
+            <a class="feature-tile" href="{% url 'view_basket' %}">
+                <span class="feature-icon">03</span>
+                <h2>Корзина</h2>
+                <p>Список выбранных товаров и итоговая стоимость заказа.</p>
+            </a>
+        {% else %}
+            <a class="feature-tile" href="{% url 'register' %}">
+                <span class="feature-icon">03</span>
+                <h2>Аккаунт</h2>
+                <p>Регистрация открывает доступ к корзине и покупкам.</p>
+            </a>
+        {% endif %}
+    </section>
 {% endblock %}

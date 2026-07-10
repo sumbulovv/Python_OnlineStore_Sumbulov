@@ -38,7 +38,7 @@ def add_to_basket(request):
 @login_required
 def view_basket(request):
     if request.user.is_authenticated:
-        basket_items = Basket.objects.filter(user=request.user)
+        basket_items = Basket.objects.select_related('product').filter(user=request.user)
         total_price = sum(item.product.price * item.quantity for item in basket_items)
     else:
         basket_items = []

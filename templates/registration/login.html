@@ -1,12 +1,31 @@
 {% extends 'base.html' %}
+
+{% block title %}Вход | Online Store{% endblock %}
+
 {% block content %}
-    <h2>Вход</h2>
-    <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Войти</button>
-    </form>
-    <p>
-        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
-    </p>
+    <section class="auth-layout">
+        <div class="auth-copy">
+            <span class="eyebrow">Аккаунт</span>
+            <h1>Вход</h1>
+            <p>Войдите, чтобы добавлять товары в корзину и продолжить покупки.</p>
+        </div>
+
+        <form class="store-form auth-card" method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors|striptags }}</div>
+            {% endif %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}
+                        <small class="form-error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Войти</button>
+            <p class="auth-switch">Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+        </form>
+    </section>
 {% endblock %}

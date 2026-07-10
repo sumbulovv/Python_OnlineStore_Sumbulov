@@ -1,17 +1,33 @@
 {% extends "base.html" %}
+
+{% block title %}Категории | Online Store{% endblock %}
+
 {% block content %}
-    <h1>Список категорий</h1>
-    <ul>
-    {% for category in categories %}
-    <li>{{ category.name }}</li>
-    {% endfor %}
-    </ul>
-    {% if request.user.is_staff %}
-        <p>
-            <input value="Добавить категорию" type="button" onclick="location.href='{% url "add_category" %}'"/>
-        </p>
-    {% endif %}
-    <p>
-        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
-    </p>
+    <section class="page-heading">
+        <div>
+            <span class="eyebrow">Ассортимент</span>
+            <h1>Категории</h1>
+            <p>Разделы помогают быстрее ориентироваться в каталоге магазина.</p>
+        </div>
+        {% if request.user.is_staff %}
+            <a class="btn btn-primary" href="{% url 'add_category' %}">Добавить категорию</a>
+        {% endif %}
+    </section>
+
+    <div class="category-grid">
+        {% for category in categories %}
+            <article class="category-card">
+                <span>{{ forloop.counter|stringformat:"02d" }}</span>
+                <h2>{{ category.name }}</h2>
+            </article>
+        {% empty %}
+            <div class="empty-state">
+                <h2>Категорий пока нет</h2>
+                <p>Добавьте первую категорию, чтобы структурировать товары.</p>
+                {% if request.user.is_staff %}
+                    <a class="btn btn-primary" href="{% url 'add_category' %}">Добавить категорию</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

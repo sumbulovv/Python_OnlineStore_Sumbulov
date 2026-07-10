@@ -5,13 +5,13 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def product_list(request):
-    products = Product.objects.all()
+    products = Product.objects.select_related('category').all()
     context = {'products': products}
     return render(request, 'product_list.html', context)
 
 
 def product_detail(request, pk):
-    product = Product.objects.select_related('stock').get(pk=pk)
+    product = Product.objects.select_related('category', 'stock').get(pk=pk)
     stock = product.stock.quantity if hasattr(product, 'stock') else 0
     context = {'product': product, 'stock': stock}
     return render(request, 'product_detail.html', context)
@@ -32,7 +32,7 @@ def add_product(request):
 
 @login_required
 def update_product(request, pk):
-    product = Product.objects.select_related('stock').get(pk=pk)
+    product = Product.objects.select_related('category', 'stock').get(pk=pk)
     stock = product.stock.quantity if hasattr(product, 'stock') else 0
         
     if request.method == 'POST':
@@ -60,12 +60,12 @@ def category_list(request):
 @login_required
 def add_category(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
-        if name:
-            Category.objects.create(name=name)
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
             return redirect('category_list')
         return render(request, 'add_category.html', {
-            'form': form, 
+            'form': form,
             'error': 'Название категории не может быть пустым'
         })
     else:

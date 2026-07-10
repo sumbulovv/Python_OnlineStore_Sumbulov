@@ -1,12 +1,31 @@
 {% extends 'base.html' %}
+
+{% block title %}Регистрация | Online Store{% endblock %}
+
 {% block content %}
-    <h2>Регистрация</h2>
-    <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Зарегистрироваться</button>
-    </form>
-    <p>
-        <input value="На главную" type="button" onclick="location.href='{% url "home" %}'"/>
-    </p>
+    <section class="auth-layout">
+        <div class="auth-copy">
+            <span class="eyebrow">Аккаунт</span>
+            <h1>Регистрация</h1>
+            <p>Создайте аккаунт, чтобы пользоваться корзиной и оформлять покупки.</p>
+        </div>
+
+        <form class="store-form auth-card" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <small class="form-error">{{ error }}</small>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Зарегистрироваться</button>
+            <p class="auth-switch">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+        </form>
+    </section>
 {% endblock %}
