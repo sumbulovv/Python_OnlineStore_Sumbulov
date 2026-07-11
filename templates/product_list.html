@@ -7,7 +7,11 @@
     <section class="page-heading">
         <div>
             <span class="eyebrow">Каталог</span>
-            <h1>Товары</h1>
+            {% if category %}
+                <h1>Товары категории: {{ category.name }}</h1>
+            {% else %}
+                <h1>Все товары</h1>
+            {% endif %}
             <p>Выберите товар и откройте подробную карточку с описанием, ценой и остатком.</p>
         </div>
         {% if request.user.is_staff %}

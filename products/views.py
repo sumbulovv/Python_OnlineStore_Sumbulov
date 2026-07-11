@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from .forms import CategoryForm, ProductForm
 from .models import Product, Category, Stock
 from django.contrib.auth.decorators import login_required
@@ -15,6 +15,16 @@ def product_detail(request, pk):
     stock = product.stock.quantity if hasattr(product, 'stock') else 0
     context = {'product': product, 'stock': stock}
     return render(request, 'product_detail.html', context)
+
+def product_list_by_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    products = Product.objects.filter(category=category)
+    
+    context = {
+        'products': products,
+        'category': category
+    }
+    return render(request, 'product_list.html', context)
 
 
 @login_required
