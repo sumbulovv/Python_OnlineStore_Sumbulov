@@ -13,4 +13,6 @@ EXPOSE 8000
 ENV PYTHONUNBUFFERED=1
 ENV DJANGO_SETTINGS_MODULE=online_store.settings
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN chmod +x ./docker-entrypoint.sh
+
+CMD [ "bash", "./docker-entrypoint.sh" ]
