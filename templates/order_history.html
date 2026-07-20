@@ -33,7 +33,9 @@
                             <tbody>
                                 {% for item in order.items.all %}
                                     <tr>
-                                        <td>{{ item.product_name }}</td>
+                                        <td>
+                                            <a class="btn btn-sm btn-outline-primary" href="{% url 'product_detail' item.product.pk %}">{{ item.product_name }}</a>
+                                        </td>
                                         <td>{{ item.quantity }} шт.</td>
                                         <td>{{ item.price }} руб.</td>
                                         <td>{{ item.total_price }} руб.</td>
