@@ -5,6 +5,7 @@ from django.db.models import ProtectedError
 from django.test import TestCase
 
 from baskets.models import Basket
+from orders.models import Order, OrderItem
 from products.models import Category, Product, Stock, product_image_path
 from tests.factories import create_product, create_product_with_stock, create_user
 
@@ -113,3 +114,33 @@ class BasketModelTestCase(TestCase):
         product.delete()
 
         self.assertFalse(Basket.objects.filter(pk=basket.pk).exists())
+
+    def test_basket_total_price(self):
+        user = create_user()
+        product = create_product(price=Decimal("12.50"))
+        basket = Basket.objects.create(user=user, product=product, quantity=3)
+
+        self.assertEqual(basket.total_price, Decimal("37.50"))
+
+
+class OrderModelTestCase(TestCase):
+    def test_order_item_keeps_product_snapshot_and_total_price(self):
+        user = create_user()
+        product = create_product(name="Notebook", price=Decimal("15.00"))
+        order = Order.objects.create(user=user, total_price=Decimal("30.00"))
+        item = OrderItem.objects.create(
+            order=order,
+            product=product,
+            product_name=product.name,
+            price=product.price,
+            quantity=2,
+        )
+
+        product.name = "Updated Notebook"
+        product.price = Decimal("99.00")
+        product.save()
+        item.refresh_from_db()
+
+        self.assertEqual(item.product_name, "Notebook")
+        self.assertEqual(item.price, Decimal("15.00"))
+        self.assertEqual(item.total_price, Decimal("30.00"))

@@ -6,3 +6,7 @@ class Basket(models.Model):
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    @property
+    def total_price(self):
+        return self.product.price * self.quantity

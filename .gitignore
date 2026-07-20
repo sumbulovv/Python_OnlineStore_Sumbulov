@@ -1,7 +1,12 @@
 .venv
 .vscode
+.env
 __pycache__/
 db.sqlite3
 *.pyc
 media/
 staticfiles/
+static/admin/
+static/admin_interface/
+static/ckeditor/
+static/colorfield/

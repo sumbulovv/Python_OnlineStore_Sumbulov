@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}История заказов | Online Store{% endblock %}
+
+{% block content %}
+    <section class="page-heading">
+        <div>
+            <span class="eyebrow">Покупки</span>
+            <h1>История заказов</h1>
+            <p>Все оформленные заказы вашего аккаунта.</p>
+        </div>
+        <a class="btn btn-outline-dark" href="{% url 'product_list' %}">К товарам</a>
+    </section>
+
+    {% if orders %}
+        <div class="order-list">
+            {% for order in orders %}
+                <article class="basket-card mb-4">
+                    <div class="basket-total">
+                        <span>Заказ #{{ order.pk }} от {{ order.created_at|date:"d.m.Y H:i" }}</span>
+                        <strong>{{ order.total_price }} руб.</strong>
+                    </div>
+                    <div class="table-responsive mt-3">
+                        <table class="table basket-table">
+                            <thead>
+                                <tr>
+                                    <th>Товар</th>
+                                    <th>Количество</th>
+                                    <th>Цена за шт.</th>
+                                    <th>Стоимость</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items.all %}
+                                    <tr>
+                                        <td>{{ item.product_name }}</td>
+                                        <td>{{ item.quantity }} шт.</td>
+                                        <td>{{ item.price }} руб.</td>
+                                        <td>{{ item.total_price }} руб.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h2>Заказов пока нет</h2>
+            <p>Оформленные покупки появятся на этой странице.</p>
+            <a class="btn btn-primary" href="{% url 'product_list' %}">Перейти к товарам</a>
+        </div>
+    {% endif %}
+{% endblock %}

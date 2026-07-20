@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Корзина | Online Store{% endblock %}
+{% block title %}Оформление заказа | Online Store{% endblock %}
 
 {% block content %}
     <section class="page-heading">
         <div>
-            <span class="eyebrow">Заказ</span>
-            <h1>Корзина</h1>
-            <p>Проверьте выбранные товары и итоговую стоимость.</p>
+            <span class="eyebrow">Оформление</span>
+            <h1>Подтверждение заказа</h1>
+            <p>Проверьте состав корзины перед оформлением.</p>
         </div>
-        <a class="btn btn-outline-dark" href="{% url 'product_list' %}">Продолжить покупки</a>
+        <a class="btn btn-outline-dark" href="{% url 'view_basket' %}">Вернуться в корзину</a>
     </section>
 
     {% if basket_items %}
@@ -27,9 +27,7 @@
                     <tbody>
                         {% for item in basket_items %}
                             <tr>
-                                <td>
-                                    <a href="{% url 'product_detail' item.product.pk %}">{{ item.product.name }}</a>
-                                </td>
+                                <td>{{ item.product.name }}</td>
                                 <td>{{ item.quantity }} шт.</td>
                                 <td>{{ item.product.price }} руб.</td>
                                 <td>{{ item.total_price }} руб.</td>
@@ -39,18 +37,18 @@
                 </table>
             </div>
             <div class="basket-total">
-                <span>Общая стоимость</span>
+                <span>К оплате</span>
                 <strong>{{ total_price }} руб.</strong>
             </div>
-            <form class="mt-4" method="post" action="{% url 'checkout' %}">
+            <form method="post" action="{% url 'checkout' %}" class="mt-4">
                 {% csrf_token %}
                 <button class="btn btn-primary" type="submit">Оформить заказ</button>
             </form>
         </div>
     {% else %}
         <div class="empty-state">
-            <h2>Ваша корзина пуста</h2>
-            <p>Откройте каталог и добавьте первый товар.</p>
+            <h2>Корзина пуста</h2>
+            <p>Добавьте товары, чтобы оформить заказ.</p>
             <a class="btn btn-primary" href="{% url 'product_list' %}">Перейти к товарам</a>
         </div>
     {% endif %}
